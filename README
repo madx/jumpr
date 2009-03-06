@@ -1,0 +1,7 @@
+~> jumpr!
+
+cp jumpr ~/bin
+chmod +x ~/bin/jumpr
+echo "j() { cd $(jumpr $1); }" >> ~∕.bashrc && . ~/.bashrc
+
+~> WTFPL licensed
