@@ -81,7 +81,7 @@ begin
         if target = ARGV[1]
           mark.slice!(0)
           Jumpr.add(mark, target)
-          puts "Added #{target} as #{mark}"
+          puts "Added #{File.expand_path(target)} as #{mark}"
         else 
           raise ArgumentError, "Target missing." 
         end
