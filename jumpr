@@ -20,11 +20,13 @@ class Jumpr
       matches = @marks.select {|k,v| k =~ expr }
       if matches.size.zero?
         puts "No matches."
+        exit 1
       elsif matches.size == 1
         puts matches.first.last
       else
         puts "Multiple matches:"
         list_matches(matches)
+        exit 1
       end
     end
 
@@ -48,17 +50,21 @@ File.open(MARKS, "w+") {|f| f.write "--- {}"} unless File.exist? MARKS
 begin
   Jumpr.load(MARKS)
 
-  if mark = ARGV[0]
+  if mark = ARGV[0].dup
     case mark
       when /^@/
         if target = ARGV[1]
-          Jumpr.add(mark[1..-1], target)
+          mark.slice!(0)
+          Jumpr.add(mark, target)
+          puts "Added #{target} as #{mark}"
+          exit 1
         else 
           raise ArgumentError, "Target missing." 
         end
 
       when /\A--list\Z/
         Jumpr.list
+        exit 1
 
       else
         Jumpr.jump(mark)
