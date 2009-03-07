@@ -1,6 +1,13 @@
 #!/usr/bin/env ruby
 require 'yaml'
 
+HELP = <<-eos
+*j* [*-@*_mark_|_mark_|*--list*|*--help*]
+*j* *@*_mark_ _path_
+eos
+HELP.gsub! /(_|\*)([@a-z_-]+)(?:_|\*)/ do
+  [$~[1][0..0].eql?("*") ? "\e[1m" : "\e[4m" , $~[2], "\e[0m"].join('')
+end
 MARKS = File.expand_path("~/.jumprc")
 
 class Jumpr
@@ -80,7 +87,7 @@ begin
         Jumpr.jump(mark)
     end
   else
-    raise ArgumentError, "j mark | @mark target | --list"  
+    raise ArgumentError, HELP.lines.to_a[0..1]
   end
 rescue => e
   puts e.message
