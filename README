@@ -5,7 +5,7 @@ $ chmod +x ~/bin/jumpr
 $ cat >> ~∕.bashrc <<! source ~/.bashrc
 > j() {
 >   local result
->   result="$(jumpr $1)"
+>   result="$(jumpr $@)"
 >   if [ $? -eq 0 ]; then cd "$result"; else echo "$result"; fi
 > }
 
