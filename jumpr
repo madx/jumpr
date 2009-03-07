@@ -4,6 +4,16 @@ require 'yaml'
 HELP = <<-eos
 *j* [*-@*_mark_|_mark_|*--list*|*--help*]
 *j* *@*_mark_ _path_
+
+  Bookmark your favorite directories.
+
+  --list: list your current available marks.
+  --help: show this help message.
+  *j* _mark_: jumps to a mark.
+  *j* *@*_mark_ _path_: add a mark to path (path will be expanded).
+  *j* *-@*_mark_: remove a mark.
+
+  This program is WTFPL-licensed, see the LICENSE file distributed with it.
 eos
 HELP.gsub! /(_|\*)([@a-z_-]+)(?:_|\*)/ do
   [$~[1][0..0].eql?("*") ? "\e[1m" : "\e[4m" , $~[2], "\e[0m"].join('')
@@ -82,6 +92,9 @@ begin
 
       when /^--list$/
         Jumpr.list
+
+      when /^--help$/
+        puts HELP
 
       else
         Jumpr.jump(mark)
