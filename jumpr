@@ -15,6 +15,15 @@ class Jumpr
       dump
     end
 
+    def remove(mark)
+      if @marks.delete(mark)
+        dump
+        puts "Deleted mark #{mark}"
+      else
+        puts "No such mark #{mark}"
+      end
+    end
+
     def jump(expr)
       expr = Regexp.new(expr, Regexp::IGNORECASE)
       matches = @marks.select {|k,v| k =~ expr }
@@ -49,7 +58,7 @@ File.open(MARKS, "w+") {|f| f.write "--- {}"} unless File.exist? MARKS
 begin
   Jumpr.load(MARKS)
 
-  if mark = ARGV[0].dup
+  if ARGV[0] && mark = ARGV[0].dup
     case mark
       when /^@/
         if target = ARGV[1]
@@ -60,7 +69,11 @@ begin
           raise ArgumentError, "Target missing." 
         end
 
-      when /\A--list\Z/
+      when /^-@/
+        mark.slice!(0..1)
+        Jumpr.remove(mark)
+
+      when /^--list$/
         Jumpr.list
 
       else
