@@ -58,7 +58,7 @@ class Jumpr
     def list
       list_matches(@marks)
     end
-    
+
     private
     def dump
       File.open(@rc, "w+") {|f| f.write YAML.dump(@marks) }
@@ -77,16 +77,13 @@ begin
 
   if ARGV[0] && mark = ARGV[0].dup
     case mark
-      when /^@/
-        if target = ARGV[1]
-          mark.slice!(0)
-          Jumpr.add(mark, target)
-          puts "Added #{File.expand_path(target)} as #{mark}"
-        else 
-          raise ArgumentError, "Target missing." 
-        end
+      when /^@.+/
+        target = ARGV[1] || "."
+        mark.slice!(0)
+        Jumpr.add(mark, target)
+        puts "Added #{File.expand_path(target)} as #{mark}"
 
-      when /^-@/
+      when /^-@.+/
         mark.slice!(0..1)
         Jumpr.remove(mark)
 
