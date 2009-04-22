@@ -13,6 +13,12 @@ HELP = <<-EOH
   *j* *@*_mark_ _path_: add a mark to path (path will be expanded).
   *j* *-@*_mark_: remove a mark.
 
+  Marks must be composed of alphanumerical characters and underscores/dashes.
+
+  When you jump to a mark, you can append a trailing folder like this:
+    *j* _mark_/foo
+  and j will append foo to the resolved mark.
+
   This program is WTFPL-licensed, see the LICENSE file distributed with it.
 EOH
 
@@ -43,13 +49,13 @@ class Jumpr
       end
     end
 
-    def jump(expr)
+    def jump(expr, rest="")
       expr = Regexp.new(expr, Regexp::IGNORECASE)
       matches = @marks.select {|k,v| k =~ expr }
       if matches.size.zero?
         puts "No matches."
       elsif matches.size == 1
-        puts matches.first.last
+        puts File.join(matches.first.last, *rest)
         exit 0
       else
         puts "Multiple matches:"
@@ -80,7 +86,7 @@ begin
 
   if ARGV[0] && mark = ARGV[0].dup
     case mark
-      when /^@.+/
+      when /^@(?:(?:\w|[_-])+)$/
         target = ARGV[1] || "."
         mark.slice!(0)
         Jumpr.add(mark, target)
@@ -97,7 +103,8 @@ begin
         puts HELP
 
       else
-        Jumpr.jump(mark)
+        mark, *rest = mark.split("/")
+        Jumpr.jump(mark, rest)
     end
   else
     raise ArgumentError, HELP.lines.to_a[0..1]
