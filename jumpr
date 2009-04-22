@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'yaml'
 
-HELP = <<-eos
+HELP = <<-EOH
 *j* [*-@*_mark_|_mark_|*--list*|*--help*]
 *j* *@*_mark_ _path_
 
@@ -14,10 +14,12 @@ HELP = <<-eos
   *j* *-@*_mark_: remove a mark.
 
   This program is WTFPL-licensed, see the LICENSE file distributed with it.
-eos
+EOH
+
 HELP.gsub! /(_|\*)([@a-z_-]+)(?:_|\*)/ do
   [$~[1][0..0].eql?("*") ? "\e[1m" : "\e[4m" , $~[2], "\e[0m"].join('')
 end
+
 MARKS = File.expand_path("~/.jumprc")
 
 class Jumpr
@@ -71,8 +73,9 @@ class Jumpr
     end
   end
 end
-File.open(MARKS, "w+") {|f| f.write "--- {}"} unless File.exist? MARKS
+
 begin
+  File.open(MARKS, "w+") {|f| f.write "--- {}"} unless File.exist? MARKS
   Jumpr.load(MARKS)
 
   if ARGV[0] && mark = ARGV[0].dup
