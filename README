@@ -2,11 +2,12 @@
 
 $ cp jumpr ~/bin
 $ chmod +x ~/bin/jumpr
-$ cat >> ~∕.bashrc <<! source ~/.bashrc
+$ cat >> ~∕.bashrc <<. && source ~/.bashrc
 > j() {
 >   local result
 >   result="$(jumpr $@)"
 >   if [ $? -eq 0 ]; then cd "$result"; else echo "$result"; fi
 > }
+> .
 
 ~> WTFPL licensed
